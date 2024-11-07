@@ -32,6 +32,15 @@ plt.ylabel("Fréquence")
 plt.title("Dispersion des valeurs de Amount")
 plt.show()
 
+# Checking de l'allure de Amount zoom
+plt.hist(df["Amount"], bins=150, range=[0, 200])
+plt.axvline(df["Amount"].median(), color="red", linestyle="--", label="Médiane")
+plt.xlabel("Amount")
+plt.ylabel("Fréquence")
+plt.title("Dispersion des valeurs de Amount")
+plt.legend()
+plt.show()
+
 
 def afficher_deciles(df):
     deciles = df["Amount"].quantile([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1])
