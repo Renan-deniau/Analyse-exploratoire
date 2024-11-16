@@ -1,6 +1,7 @@
 # test
 # pip install pandas
 # pip install matplotlib
+# pour activer le venv .venv\Scripts\activate
 
 import pandas as pd
 import numpy as np
@@ -114,75 +115,94 @@ def format_axis(x, pos):
         return f"{x:.3g}"
 
 
-# Histogramme de la colonne Time
-fig, axs = plt.subplots(1, 2, figsize=(12, 6), gridspec_kw={"width_ratios": [5, 2]})
+def afficher_variable(df, colonne):
+    # Histogramme de la colonne Time
+    fig, axs = plt.subplots(1, 2, figsize=(12, 6), gridspec_kw={"width_ratios": [5, 2]})
 
-# Histogramme
-axs[0].hist(df["Time"], bins=50, color="cornflowerblue")
-axs[0].set_title(
-    "Nombre de secondes écoulées entre cette transaction et la première transaction dans le dataset"
-)
-axs[0].set_xlabel("Secondes")
-axs[0].set_ylabel("Nombre de transactions")
+    # Histogramme
+    axs[0].hist(df[colonne], bins=50, color="cornflowerblue")
+    axs[0].set_title(
+        f"Histogramme de la variable {colonne}", fontsize=14, fontweight="bold"
+    )
+    axs[0].set_xlabel("Secondes")
+    axs[0].set_ylabel("Nombre de transactions")
 
-# Application du format aux axes
-axs[0].xaxis.set_major_formatter(ticker.FuncFormatter(format_axis))
-axs[0].yaxis.set_major_formatter(ticker.FuncFormatter(format_axis))
+    # Application du format aux axes
+    axs[0].xaxis.set_major_formatter(ticker.FuncFormatter(format_axis))
+    axs[0].yaxis.set_major_formatter(ticker.FuncFormatter(format_axis))
 
-# Calcul des statistiques
-time_stats = df["Time"].describe()
+    # Calcul des statistiques
+    time_stats = df[colonne].describe()
 
-# Affichage des statistiques sur le graphique avec trois chiffres significatifs
-stats_text = (
-    f"Count: {int(time_stats['count'])}\n"
-    f"Mean: {format_axis(time_stats['mean'], 0)}\n"
-    f"Std Dev: {format_axis(time_stats['std'], 0)}\n"
-    f"Min: {format_axis(time_stats['min'], 0)}\n"
-    f"25%: {format_axis(time_stats['25%'], 0)}\n"
-    f"50% (Median): {format_axis(time_stats['50%'], 0)}\n"
-    f"75%: {format_axis(time_stats['75%'], 0)}\n"
-    f"Max: {format_axis(time_stats['max'], 0)}"
-)
+    # Affichage des statistiques sur le graphique avec trois chiffres significatifs
+    stats_text = (
+        f"Count: {int(time_stats['count'])}\n"
+        f"Mean: {format_axis(time_stats['mean'], 0)}\n"
+        f"Std Dev: {format_axis(time_stats['std'], 0)}\n"
+        f"Min: {format_axis(time_stats['min'], 0)}\n"
+        f"25%: {format_axis(time_stats['25%'], 0)}\n"
+        f"50% (Median): {format_axis(time_stats['50%'], 0)}\n"
+        f"75%: {format_axis(time_stats['75%'], 0)}\n"
+        f"Max: {format_axis(time_stats['max'], 0)}"
+    )
 
-# Créer deux colonnes de texte dans la boîte à droite du graphique
-bbox = dict(facecolor="white", alpha=0.5, boxstyle="square", ec="black")
-x1 = 0.1
-y1 = 0.8
-x2 = x1 + 0.8
-axs[1].axis("off")  # Supprimer les axes
-axs[1].text(
-    x1,
-    y1,
-    "Statistique",
-    transform=axs[1].transAxes,
-    fontsize=10,
-    ha="left",
-    va="center",
-    bbox=bbox,
-)
-axs[1].text(
-    x2,
-    y1,
-    "Valeur",
-    transform=axs[1].transAxes,
-    fontsize=10,
-    ha="right",
-    va="center",
-    bbox=bbox,
-)
-
-# Afficher les statistiques dans les deux colonnes
-y2 = y1 - 0.1
-for stat in stats_text.split("\n"):
-    label, value = stat.split(":")
+    # Créer deux colonnes de texte dans la boîte à droite du graphique
+    bbox = dict(facecolor="white", alpha=0.5, boxstyle="square", ec="black")
+    x1 = 0.1
+    y1 = 0.8
+    x2 = x1 + 0.8
+    axs[1].axis("off")  # Supprimer les axes
     axs[1].text(
-        x1, y2, label, transform=axs[1].transAxes, fontsize=10, ha="left", va="center"
+        x1,
+        y1,
+        "Statistique",
+        transform=axs[1].transAxes,
+        fontsize=10,
+        ha="left",
+        va="center",
+        bbox=bbox,
     )
     axs[1].text(
-        x2, y2, value, transform=axs[1].transAxes, fontsize=10, ha="right", va="center"
+        x2,
+        y1,
+        "Valeur",
+        transform=axs[1].transAxes,
+        fontsize=10,
+        ha="right",
+        va="center",
+        bbox=bbox,
     )
-    y2 -= 0.05
 
-# Affichage du graphique
-plt.tight_layout()
-plt.show()
+    # Afficher les statistiques dans les deux colonnes
+    y2 = y1 - 0.1
+    for stat in stats_text.split("\n"):
+        label, value = stat.split(":")
+        axs[1].text(
+            x1,
+            y2,
+            label,
+            transform=axs[1].transAxes,
+            fontsize=10,
+            ha="left",
+            va="center",
+        )
+        axs[1].text(
+            x2,
+            y2,
+            value,
+            transform=axs[1].transAxes,
+            fontsize=10,
+            ha="right",
+            va="center",
+        )
+        y2 -= 0.05
+
+    # Affichage du graphique
+    plt.tight_layout()
+    plt.show()
+
+
+afficher_variable(df, "Time")
+
+# for colonne in df.columns:
+#   afficher_variable(df,colonne)
